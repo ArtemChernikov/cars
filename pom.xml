@@ -54,6 +54,12 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -94,9 +100,9 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>4.15.0</version>
-<!--                <configuration>-->
-<!--                    <propertyFile>${liquibase.config}</propertyFile>-->
-<!--                </configuration>-->
+                <configuration>
+                    <propertyFile>${liquibase.config}</propertyFile>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>process-resources</phase>
