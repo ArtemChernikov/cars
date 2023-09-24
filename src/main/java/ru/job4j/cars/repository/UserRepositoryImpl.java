@@ -1,13 +1,11 @@
 package ru.job4j.cars.repository;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+import org.springframework.stereotype.Repository;
 import ru.job4j.cars.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -18,9 +16,9 @@ import java.util.Optional;
  * @since 24.04.2023
  */
 @AllArgsConstructor
+@Repository
 public class UserRepositoryImpl implements UserRepository {
-
-    private final SessionFactory sessionFactory;
+    private final CrudRepository crudRepository;
 
     /**
      * Метод используется для записи пользователя в БД
@@ -30,16 +28,18 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public User create(User user) {
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.save(user);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
+//        Session session = sessionFactory.openSession();
+//        try {
+//            session.beginTransaction();
+//            session.save(user);
+//            session.getTransaction().commit();
+//        } catch (Exception e) {
+//            session.getTransaction().rollback();
+//        } finally {
+//            session.close();
+//        }
+//        return user;
+        crudRepository.run(session -> session.persist(user));
         return user;
     }
 
@@ -50,16 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public void update(User user) {
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.update(user);
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
+        crudRepository.run(session -> session.merge(user));
     }
 
     /**
@@ -69,18 +60,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public void delete(int userId) {
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.createQuery("DELETE User WHERE id = :id")
-                    .setParameter("id", userId)
-                    .executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
+        crudRepository.run("DELETE User WHERE id = :id", Map.of("id", userId));
     }
 
     /**
@@ -90,19 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public List<User> findAllOrderById() {
-        Session session = sessionFactory.openSession();
-        List<User> users = new ArrayList<>();
-        try {
-            session.beginTransaction();
-            Query<User> query = session.createQuery("FROM User order by id ASC", User.class);
-            users = query.getResultList();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return users;
+        return crudRepository.query("FROM User order by id ASC", User.class);
     }
 
     /**
@@ -112,20 +80,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public Optional<User> findById(int userId) {
-        Session session = sessionFactory.openSession();
-        Optional<User> user = Optional.empty();
-        try {
-            session.beginTransaction();
-            Query<User> query = session.createQuery("FROM User WHERE id = :id", User.class);
-            query.setParameter("id", userId);
-            user = query.uniqueResultOptional();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return user;
+        return crudRepository.optional("FROM User WHERE id = :id", User.class, Map.of("id", userId));
     }
 
     /**
@@ -136,20 +91,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public List<User> findByLikeLogin(String key) {
-        Session session = sessionFactory.openSession();
-        List<User> users = new ArrayList<>();
-        try {
-            session.beginTransaction();
-            Query<User> query = session.createQuery("FROM User WHERE login LIKE :key", User.class);
-            query.setParameter("key", "%" + key + "%");
-            users = query.getResultList();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return users;
+        return crudRepository.query("FROM User WHERE login LIKE :key", User.class, Map.of("key", "%" + key + "%"));
     }
 
     /**
@@ -160,19 +102,6 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public Optional<User> findByLogin(String login) {
-        Session session = sessionFactory.openSession();
-        Optional<User> user = Optional.empty();
-        try {
-            session.beginTransaction();
-            Query<User> query = session.createQuery("FROM User WHERE login = :login", User.class);
-            query.setParameter("login", login);
-            user = query.uniqueResultOptional();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-        return user;
+        return crudRepository.optional("FROM User WHERE login = :login", User.class, Map.of("login", login));
     }
 }
