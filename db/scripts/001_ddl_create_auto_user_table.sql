@@ -1,6 +1,6 @@
-create table if not exists auto_user
+CREATE TABLE IF NOT EXISTS auto_user
 (
-    id   serial primary key,
-    login varchar unique not null,
-    password varchar not null
+    id       SERIAL PRIMARY KEY,
+    login    VARCHAR UNIQUE NOT NULL,
+    password VARCHAR        NOT NULL
 );
