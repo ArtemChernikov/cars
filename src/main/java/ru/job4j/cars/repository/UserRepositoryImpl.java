@@ -28,17 +28,6 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public User create(User user) {
-//        Session session = sessionFactory.openSession();
-//        try {
-//            session.beginTransaction();
-//            session.save(user);
-//            session.getTransaction().commit();
-//        } catch (Exception e) {
-//            session.getTransaction().rollback();
-//        } finally {
-//            session.close();
-//        }
-//        return user;
         crudRepository.run(session -> session.persist(user));
         return user;
     }
