@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,5 +30,5 @@ public class User {
     private String password;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_user_id")
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
 }
