@@ -26,8 +26,15 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Integer id;
+
+    @OneToOne
+    @JoinColumn(name = "car_id")
+    private Car car;
+
     private String description;
+
     private LocalDateTime created;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_post_id")
     private List<PriceHistory> priceHistory = new ArrayList<>();

@@ -25,12 +25,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private int id;
+
     @EqualsAndHashCode.Include
     private String login;
+
     private String password;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "auto_user_id")
     private List<Post> posts = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "participates",
             joinColumns = {@JoinColumn(name = "auto_user_id")},

@@ -1,4 +1,4 @@
-CREATE TABLE participates
+CREATE TABLE IF NOT EXISTS participates
 (
     id           SERIAL PRIMARY KEY,
     auto_user_id INT NOT NULL REFERENCES auto_user(id),
